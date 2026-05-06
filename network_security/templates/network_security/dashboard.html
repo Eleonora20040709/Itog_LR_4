@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Контейнер безопасности | Папсуева Э.А.</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',sans-serif; background:linear-gradient(135deg,#1a2a6c,#b21f1f); min-height:100vh; }
+        .header { background:rgba(0,0,0,0.4); color:white; padding:20px; text-align:center; }
+        .nav { display:flex; gap:15px; justify-content:center; margin-top:15px; }
+        .nav a { color:white; text-decoration:none; padding:8px 20px; background:rgba(255,255,255,0.2); border-radius:25px; }
+        .container { max-width:1400px; margin:30px auto; padding:0 20px; display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+        .card { background:white; border-radius:20px; padding:25px; box-shadow:0 15px 35px rgba(0,0,0,0.2); }
+        .card h2 { color:#1a2a6c; margin-bottom:20px; border-bottom:3px solid #fdbb4d; padding-bottom:10px; }
+        form { display:flex; flex-direction:column; gap:15px; }
+        input,select,button { padding:12px; border:1px solid #ddd; border-radius:10px; }
+        button { background:linear-gradient(135deg,#1a2a6c,#b21f1f); color:white; cursor:pointer; border:none; font-weight:bold; }
+        .device-item { background:#f5f5f5; border-radius:12px; padding:15px; margin-bottom:10px; display:flex; justify-content:space-between; }
+        .device-item.blocked { background:#ffe0e0; border-left:4px solid #e74c3c; }
+        .device-item.active { background:#e0ffe0; border-left:4px solid #27ae60; }
+        .alert { padding:12px; border-radius:10px; margin-bottom:15px; }
+        .alert-success { background:#d4edda; color:#155724; }
+        .alert-error { background:#f8d7da; color:#721c24; }
+        .role-info { background:#e8f4f8; padding:15px; border-radius:12px; margin-top:20px; font-size:14px; }
+        @media (max-width:900px) { .container { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛡️ Контейнер безопасности сетевого доступа</h1>
+        <p>Папсуева Э.А. | Вариант №31 | Защита от НСД к физическому оборудованию</p>
+        <div class="nav">
+            <a href="{% url 'security_dashboard' %}">🏠 Главная</a>
+            <a href="{% url 'admin_panel' %}">👨‍💼 Админ-панель</a>
+            <a href="{% url 'view_logs' %}">📋 Журнал</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>🔐 Доступ к оборудованию</h2>
+            {% if messages %}{% for m in messages %}<div class="alert alert-{{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+            <form method="POST" action="{% url 'check_access' %}">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Имя" value="{{ username }}" required>
+                <select name="role">
+                    <option value="guest" {% if role == 'guest' %}selected{% endif %}>👤 Гость</option>
+                    <option value="operator" {% if role == 'operator' %}selected{% endif %}>🔧 Оператор</option>
+                    <option value="admin" {% if role == 'admin' %}selected{% endif %}>👨‍💼 Админ</option>
+                    <option value="auditor" {% if role == 'auditor' %}selected{% endif %}>📊 Аудитор</option>
+                </select>
+                <select name="device_id" required>
+                    <option value="">-- Выберите --</option>
+                    {% for id, d in devices.items %}<option value="{{ id }}">{{ d.name }} ({{ d.ip|default:'физическое' }})</option>{% endfor %}
+                </select>
+                <select name="action">
+                    <option value="view">👁️ Просмотр</option>
+                    <option value="monitor">📡 Мониторинг</option>
+                    <option value="block">🔒 Блокировка</option>
+                    <option value="unblock">🔓 Разблокировка</option>
+                </select>
+                <input type="password" name="password" placeholder="Пароль">
+                <button type="submit">🚀 Выполнить</button>
+            </form>
+            <div class="role-info">
+                <strong>Роль:</strong> {{ role|title }}<br>
+                <strong>Действия:</strong> {% for a in available_actions %}<span style="background:#1a2a6c;color:white;padding:2px 8px;border-radius:15px;">{{ a }}</span>{% endfor %}<br>
+                <strong>Устройства:</strong> {% for d in available_devices %}<span style="background:#b21f1f;color:white;padding:2px 8px;border-radius:15px;">{{ d }}</span>{% empty %}нет{% endfor %}
+            </div>
+        </div>
+        <div class="card">
+            <h2>🖥️ Статус оборудования</h2>
+            {% for id, d in devices.items %}
+            <div class="device-item {% if d.protected %}blocked{% else %}active{% endif %}">
+                <div><strong>{{ d.name }}</strong><br><small>{{ d.ip|default:'физическое' }}</small></div>
+                <div><span class="status-badge">{% if d.protected %}🔒 БЛОК{% else %}✅ ДОСТУП{% endif %}</span></div>
+            </div>
+            {% endfor %}
+            <p style="margin-top:20px;font-size:12px;color:#666;text-align:center;">⚠️ Угроза: НСД из виртуальной сети к физическому оборудованию</p>
+        </div>
+    </div>
+</body>
+</html>
+

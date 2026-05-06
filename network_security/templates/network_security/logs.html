@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Журнал событий | Папсуева Э.А.</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a2a6c,#b21f1f);min-height:100vh;}
+        .header{background:rgba(0,0,0,0.4);color:white;padding:20px;text-align:center;}
+        .nav{display:flex;gap:15px;justify-content:center;margin-top:15px;}
+        .nav a{color:white;text-decoration:none;padding:8px 20px;background:rgba(255,255,255,0.2);border-radius:25px;}
+        .container{max-width:1400px;margin:30px auto;padding:0 20px;}
+        .card{background:white;border-radius:20px;padding:25px;}
+        table{width:100%;border-collapse:collapse;}
+        th,td{padding:12px;text-align:left;border-bottom:1px solid #ddd;}
+        th{background:#1a2a6c;color:white;position:sticky;top:0;}
+        .granted{color:#27ae60;font-weight:bold;}
+        .denied{color:#e74c3c;font-weight:bold;}
+        .badge{display:inline-block;background:linear-gradient(135deg,#1a2a6c,#b21f1f);color:white;padding:8px 20px;border-radius:30px;margin-bottom:20px;}
+        .scroll{overflow-x:auto;max-height:600px;overflow-y:auto;}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 Журнал событий безопасности</h1>
+        <div class="nav">
+            <a href="{% url 'security_dashboard' %}">🏠 Главная</a>
+            <a href="{% url 'admin_panel' %}">👨‍💼 Админ</a>
+            <a href="{% url 'view_logs' %}">📋 Журнал</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <span class="badge">📊 Всего записей: {{ count }}</span>
+            {% if logs %}
+            <div class="scroll">
+                <table>
+                    <thead><tr><th>Время</th><th>Пользователь</th><th>Роль</th><th>Действие</th><th>Устройство</th><th>Результат</th><th>Детали</th></tr></thead>
+                    <tbody>{% for l in logs %}<tr><td>{{ l.time }}</td><td>{{ l.username }}</td><td>{{ l.role }}</td><td>{{ l.action }}</td><td>{{ l.device }}</td><td class="{% if l.result == 'GRANTED' %}granted{% else %}denied{% endif %}">{{ l.result }}</td><td>{{ l.detail|truncatechars:50 }}</td></tr>{% endfor %}</tbody>
+                </table>
+            </div>
+            {% else %}
+            <p style="text-align:center;padding:60px;">📭 Журнал пуст</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

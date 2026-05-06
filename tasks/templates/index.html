@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+    <meta charset="utf-8"> <!-- Задаёт кодировку UTF-8 для поддержки всех символов, включая русские -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">  <!-- Управляет отображением на мобильных устройствах: ширина равна ширине экрана, масштаб по умолчанию 1 -->
+    <title>Task Tracker</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> <!-- Подключает внешний файл стилей Bootstrap 5 для готовых компонентов и сетки -->
+  </head>
+  <body>
+    {% csrf_token %} <!-- Django-шаблон: вставляет скрытое поле с CSRF-токеном для защиты от межсайтовых атак -->
+      <div class="container"> <!-- Bootstrap-контейнер для центрирования и горизонтальных отступов содержимого -->
+        <br>
+        <h2><strong>Task Tracker Папсуева Э.А. 📝</strong></h2> 
+
+        <br>
+
+         <ul class="list-group">
+
+            <li class="list-group-item mb-2">
+              1. Проснуться и встать с кровати
+            </li> 
+            <li class="list-group-item mb-2">
+              2. Погулять с собакой.
+            </li> 
+            <li class="list-group-item mb-2">
+              3. Прийти на пару Николая Владимировича.
+            </li> 
+           <li class="list-group-item mb-2">
+             4. Сделать общее задание.
+           </li> 
+           <li class="list-group-item mb-2">
+             5. Сделать презентации по Нефтегазотрейдингу.
+           </li> 
+           <li class="list-group-item mb-2">
+             6. Сделать доклад по HTTP.
+           </li> 
+           <li class="list-group-item mb-2">
+             7. Сделать GAP-Анализ.
+           </li> 
+
+        </ul>
+
+
+
+      </div>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> <!-- Подключает JavaScript-библиотеку Bootstrap с модулем Popper для интерактивных компонентов (модальные окна, выпадающие меню) -->
+
+
+
+  </body>
+</html>
+
